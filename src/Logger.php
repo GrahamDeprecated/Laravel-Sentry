@@ -56,16 +56,18 @@ class Logger implements LoggerInterface
      */
     public function log($level, $message, array $context = [])
     {
-        $severity = $this->getSeverity($level);
+        $level = $this->getSeverity($level);
 
         if ($message instanceof Exception) {
             $this->sentry->getIdent($this->sentry->captureException($message), [
                 'extra' => $context,
+                'level' => $level,
             ]);
         } else {
             $msg = $this->formatMessage($message);
             $this->sentry->getIdent($this->sentry->captureMessage($msg), [
                 'extra' => $context,
+                'level' => $level,
             ]);
         }
     }
@@ -80,14 +82,18 @@ class Logger implements LoggerInterface
     protected function getSeverity($level)
     {
         switch ($level) {
+            case 'warn':
             case 'warning':
-            case 'notice':
-                return 'warning';
+                return Sentry::WARNING;
             case 'info':
+            case 'notice';
+                return Sentry::INFO;
             case 'debug':
-                return 'info';
+                return Sentry::DEBUG;
+            case 'fatal':
+                return Sentry::FATAL;
             default:
-                return 'error';
+                return Sentry::ERROR;
         }
     }
 }

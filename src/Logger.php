@@ -71,6 +71,8 @@ class Logger implements LoggerInterface
                 'level' => $level,
             ]));
         }
+
+        $this->sentry->context->clear();
     }
 
     /**

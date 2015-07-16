@@ -82,16 +82,12 @@ class Logger implements LoggerInterface
     protected function getSeverity($level)
     {
         switch ($level) {
-            case 'warn':
             case 'warning':
+            case 'notice':
                 return Sentry::WARNING;
             case 'info':
-            case 'notice';
-                return Sentry::INFO;
             case 'debug':
-                return Sentry::DEBUG;
-            case 'fatal':
-                return Sentry::FATAL;
+                return Sentry::INFO;
             default:
                 return Sentry::ERROR;
         }

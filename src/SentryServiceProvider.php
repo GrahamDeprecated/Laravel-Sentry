@@ -15,7 +15,7 @@ use Illuminate\Support\ServiceProvider;
 use Raven_Client as Sentry;
 
 /**
- * This is the bugsnag service provider class.
+ * This is the sentry service provider class.
  *
  * @author Graham Campbell <graham@alt-three.com>
  * @author James Brooks <james@alt-three.com>

@@ -58,17 +58,18 @@ class Logger implements LoggerInterface
     {
         $level = $this->getSeverity($level);
 
+        $this->sentry->extra_context(array_merge($context));
+
         if ($message instanceof Exception) {
-            $this->sentry->getIdent($this->sentry->captureException($message), [
-                'extra' => $context,
+            $this->sentry->getIdent($this->sentry->captureException($message, [
                 'level' => $level,
-            ]);
+            ]));
         } else {
             $msg = $this->formatMessage($message);
-            $this->sentry->getIdent($this->sentry->captureMessage($msg), [
-                'extra' => $context,
+
+            $this->sentry->getIdent($this->sentry->captureMessage($msg, [], [
                 'level' => $level,
-            ]);
+            ]));
         }
     }
 

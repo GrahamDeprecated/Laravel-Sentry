@@ -11,11 +11,11 @@
 
 namespace AltThree\Tests\Sentry;
 
-use AltThree\Sentry\SentryServiceProvider;
 use AltThree\Sentry\Logger;
-use Raven_Client as Sentry;
+use AltThree\Sentry\SentryServiceProvider;
 use GrahamCampbell\TestBench\AbstractPackageTestCase;
 use GrahamCampbell\TestBenchCore\ServiceProviderTrait;
+use Raven_Client as Sentry;
 
 /**
  * This is the service provider test class.

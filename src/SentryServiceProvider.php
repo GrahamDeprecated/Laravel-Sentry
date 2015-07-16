@@ -11,8 +11,8 @@
 
 namespace AltThree\Sentry;
 
-use Raven_Client as Sentry;
 use Illuminate\Support\ServiceProvider;
+use Raven_Client as Sentry;
 
 /**
  * This is the bugsnag service provider class.

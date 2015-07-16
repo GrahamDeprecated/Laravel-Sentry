@@ -13,8 +13,8 @@ namespace AltThree\Sentry;
 
 use AltThree\Logger\LoggerTrait;
 use Exception;
-use Raven_Client as Sentry;
 use Psr\Log\LoggerInterface;
+use Raven_Client as Sentry;
 
 /**
  * This is the logger class.

@@ -40,7 +40,7 @@ class Logger implements LoggerInterface
      *
      * @return void
      */
-    public function __construct(\Raven_Client $sentry)
+    public function __construct(Sentry $sentry)
     {
         $this->sentry = $sentry;
     }
@@ -58,18 +58,13 @@ class Logger implements LoggerInterface
     {
         $level = $this->getSeverity($level);
 
-        $this->sentry->extra_context(array_merge($context));
+        $this->sentry->extra_context($context);
 
         if ($message instanceof Exception) {
-            $this->sentry->getIdent($this->sentry->captureException($message, [
-                'level' => $level,
-            ]));
+            $this->sentry->getIdent($this->sentry->captureException($message, ['level' => $level]));
         } else {
             $msg = $this->formatMessage($message);
-
-            $this->sentry->getIdent($this->sentry->captureMessage($msg, [], [
-                'level' => $level,
-            ]));
+            $this->sentry->getIdent($this->sentry->captureMessage($msg, [], ['level' => $level]));
         }
 
         $this->sentry->context->clear();

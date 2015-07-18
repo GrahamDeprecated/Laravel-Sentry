@@ -12,6 +12,7 @@
 namespace AltThree\Sentry;
 
 use AltThree\Logger\LoggerTrait;
+use Closure;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Raven_Client as Sentry;
@@ -34,15 +35,24 @@ class Logger implements LoggerInterface
     protected $sentry;
 
     /**
+     * The current user resolver.
+     *
+     * @var \Closure
+     */
+    protected $user;
+
+    /**
      * Create a new logger instance.
      *
      * @param \Raven_Client $sentry
+     * @param \Closure      $user
      *
      * @return void
      */
-    public function __construct(Sentry $sentry)
+    public function __construct(Sentry $sentry, Closure $user)
     {
         $this->sentry = $sentry;
+        $this->user = $user;
     }
 
     /**
@@ -56,9 +66,15 @@ class Logger implements LoggerInterface
      */
     public function log($level, $message, array $context = [])
     {
-        $level = $this->getSeverity($level);
+        $this->sentry->context->clear();
+
+        if ($user = $this->resolveCurrentUser()) {
+            $sentry->user_context($user);
+        }
 
         $this->sentry->extra_context($context);
+
+        $level = $this->getSeverity($level);
 
         if ($message instanceof Exception) {
             $this->sentry->getIdent($this->sentry->captureException($message, ['level' => $level]));
@@ -66,8 +82,18 @@ class Logger implements LoggerInterface
             $msg = $this->formatMessage($message);
             $this->sentry->getIdent($this->sentry->captureMessage($msg, [], ['level' => $level]));
         }
+    }
 
-        $this->sentry->context->clear();
+    /**
+     * Resolve the current user.
+     *
+     * @return array|null
+     */
+    protected function resolveCurrentUser()
+    {
+        $resolver = $this->user;
+
+        return $resolver();
     }
 
     /**

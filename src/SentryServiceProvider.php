@@ -67,13 +67,7 @@ class SentryServiceProvider extends ServiceProvider
     protected function registerSentry()
     {
         $this->app->singleton('sentry', function ($app) {
-            $sentry = new Sentry($app->config->get('sentry.dsn'));
-
-            if ($app->auth->check()) {
-                $sentry->user_context(['id' => $app->auth->user()->getAuthIdentifier()]);
-            }
-
-            return $sentry;
+            return new Sentry($app->config->get('sentry.dsn'));
         });
 
         $this->app->alias('sentry', Sentry::class);
@@ -87,7 +81,14 @@ class SentryServiceProvider extends ServiceProvider
     protected function registerLogger()
     {
         $this->app->singleton('sentry.logger', function ($app) {
-            return new Logger($app['sentry']);
+            $sentry = $app['sentry'];
+            $user = function () use ($app) {
+                if ($user = $app->auth->user()) {
+                    return $user->toArray();
+                }
+            };
+
+            return new Logger($sentry, $user);
         });
 
         $this->app->alias('sentry.logger', Logger::class);

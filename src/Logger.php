@@ -69,7 +69,7 @@ class Logger implements LoggerInterface
         $this->sentry->context->clear();
 
         if ($user = $this->resolveCurrentUser()) {
-            $sentry->user_context($user);
+            $this->sentry->user_context($user);
         }
 
         $this->sentry->extra_context($context);

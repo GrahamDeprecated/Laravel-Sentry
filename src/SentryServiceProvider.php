@@ -47,6 +47,7 @@ class SentryServiceProvider extends ServiceProvider
 
         $this->mergeConfigFrom($source, 'sentry');
     }
+
     /**
      * Register the service provider.
      *
@@ -57,6 +58,7 @@ class SentryServiceProvider extends ServiceProvider
         $this->registerSentry();
         $this->registerLogger();
     }
+
     /**
      * Register the sentry class.
      *
@@ -76,6 +78,7 @@ class SentryServiceProvider extends ServiceProvider
 
         $this->app->alias('sentry', Sentry::class);
     }
+
     /**
      * Register the logger class.
      *
@@ -89,6 +92,7 @@ class SentryServiceProvider extends ServiceProvider
 
         $this->app->alias('sentry.logger', Logger::class);
     }
+
     /**
      * Get the services provided by the provider.
      *

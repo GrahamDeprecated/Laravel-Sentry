@@ -20,6 +20,11 @@ Once Alt Three Sentry is installed, you need to register the service provider. O
 * `'AltThree\Sentry\SentryServiceProvider'`
 
 
+## Security
+
+If you discover a security vulnerability within this package, please e-mail us at support@alt-three.com. All security vulnerabilities will be promptly addressed.
+
+
 ## License
 
 Alt Three Sentry is licensed under [The MIT License (MIT)](LICENSE).

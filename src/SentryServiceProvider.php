@@ -41,8 +41,10 @@ class SentryServiceProvider extends ServiceProvider
     {
         $source = realpath(__DIR__.'/../config/sentry.php');
 
-        if (class_exists('Illuminate\Foundation\Application', false)) {
+        if (class_exists('Illuminate\Foundation\Application', false) && $app->runningInConsole()) {
             $this->publishes([$source => config_path('sentry.php')]);
+        } elseif (class_exists('Laravel\Lumen\Application', false)) {
+            $app->configure('sentry');
         }
 
         $this->mergeConfigFrom($source, 'sentry');

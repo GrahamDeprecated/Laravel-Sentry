@@ -11,7 +11,7 @@
 
 namespace AltThree\Sentry;
 
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
@@ -32,24 +32,22 @@ class SentryServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->setupConfig($this->app);
+        $this->setupConfig();
     }
 
     /**
      * Setup the config.
      *
-     * @param \Illuminate\Contracts\Foundation\Application $app
-     *
      * @return void
      */
-    protected function setupConfig(Application $app)
+    protected function setupConfig()
     {
         $source = realpath(__DIR__.'/../config/sentry.php');
 
-        if ($app instanceof LaravelApplication && $app->runningInConsole()) {
+        if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
             $this->publishes([$source => config_path('sentry.php')]);
-        } elseif ($app instanceof LumenApplication) {
-            $app->configure('sentry');
+        } elseif ($this->app instanceof LumenApplication) {
+            $this->app->configure('sentry');
         }
 
         $this->mergeConfigFrom($source, 'sentry');
@@ -73,7 +71,7 @@ class SentryServiceProvider extends ServiceProvider
      */
     protected function registerSentry()
     {
-        $this->app->singleton('sentry', function (Application $app) {
+        $this->app->singleton('sentry', function (Container $app) {
             return new Sentry($app->config->get('sentry.dsn'));
         });
 
@@ -87,7 +85,7 @@ class SentryServiceProvider extends ServiceProvider
      */
     protected function registerLogger()
     {
-        $this->app->singleton('sentry.logger', function (Application $app) {
+        $this->app->singleton('sentry.logger', function (Container $app) {
             $sentry = $app['sentry'];
             $user = function () use ($app) {
                 if ($user = $app->auth->user()) {
@@ -109,7 +107,8 @@ class SentryServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
-            'sentry', 'sentry.logger',
+            'sentry',
+            'sentry.logger',
         ];
     }
 }

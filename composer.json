@@ -20,10 +20,10 @@
     "require": {
         "php": ">=5.5.9",
         "alt-three/logger": "^1.1",
-        "raven/raven": "^0.12",
         "illuminate/contracts": "5.1.*|5.2.*|5.3.*",
         "illuminate/support": "5.1.*|5.2.*|5.3.*",
-        "psr/log": "^1.0"
+        "psr/log": "^1.0",
+        "sentry/sentry": "^0.18"
     },
     "require-dev": {
         "graham-campbell/testbench": "^3.1",

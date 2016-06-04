@@ -88,7 +88,7 @@ class SentryServiceProvider extends ServiceProvider
         $this->app->singleton('sentry.logger', function (Container $app) {
             $sentry = $app['sentry'];
             $user = function () use ($app) {
-                if ($user = $app->auth->user()) {
+                if ($app->config->get('sentry.user', true) && ($user = $app->auth->user())) {
                     return $user->toArray();
                 }
             };
